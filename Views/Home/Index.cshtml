@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Басты бет";
+}
+
+<div class="hero">
+    <h1>ASP.NET Core Identity жүйесі</h1>
+    <p>Тіркелу, кіру, рөлдік қолжетімділік және студенттер тізімін басқару.</p>
+    @if (!User.Identity?.IsAuthenticated == true)
+    {
+        <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Тіркелу</a>
+        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Кіру</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" asp-controller="Students" asp-action="Index">Студенттер тізімі</a>
+    }
+</div>

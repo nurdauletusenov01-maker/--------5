@@ -1,0 +1,57 @@
+@model IEnumerable<StudentRowViewModel>
+@{
+    ViewData["Title"] = "Студенттер";
+    var isAdmin = (bool)(ViewData["IsAdmin"] ?? false);
+}
+
+<h2 class="mb-3">Студенттер тізімі</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Аты</th>
+                <th>Тегі</th>
+                <th>Email</th>
+                <th>Рөлі</th>
+                @if (isAdmin)
+                {
+                    <th>Әрекет</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.FirstName</td>
+                <td>@student.LastName</td>
+                <td>@student.Email</td>
+                <td>@student.Role</td>
+                @if (isAdmin)
+                {
+                    <td>
+                        @if (student.Role != "Admin")
+                        {
+                            <form asp-action="Delete" method="post" class="d-inline"
+                                  onsubmit="return confirm('Пайдаланушыны жою керек пе?');">
+                                <input type="hidden" name="id" value="@student.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Жою</button>
+                            </form>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
