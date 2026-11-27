@@ -15,7 +15,6 @@
 ```powershell
 dotnet restore
 dotnet tool install --global dotnet-ef --version 8.0.22
-dotnet ef migrations add InitialIdentity
 dotnet ef database update
 dotnet run
 ```
@@ -26,11 +25,11 @@ SQLite дерекқорының файл атауы `appsettings.json` ішін�
 ```powershell
 dotnet user-secrets init
 dotnet user-secrets set "Identity:AdminEmail" "admin@example.com"
-dotnet user-secrets set "Identity:AdminPassword" "QuPiyaSöz1"
+dotnet user-secrets set "Identity:AdminPassword" "<құпиясөзіңіз>"
 dotnet run
 ```
 
-User Secrets қолданған Admin құпия сөзі GitHub-та жарияланбайды. Әрбір жаңа тіркелуші автоматты түрде `Student` рөлін алады.
+`<құпиясөзіңіз>` орнына жеке құпиясөзіңізді қойыңыз; нақты құпиясөзді README-ге немесе репозиторийге жазбаңыз. Admin құпиясөзін User Secrets арқылы беріңіз. Әрбір жаңа тіркелуші автоматты түрде `Student` рөлін алады.
 
 ## Рөлдер
 - **Student:** студенттер тізімін көреді; пайдаланушыны жоя алмайды.
@@ -47,7 +46,7 @@ User Secrets қолданған Admin құпия сөзі GitHub-та жария
 8. Құпия құпия сөздер кодқа немесе GitHub репозиторийіне жазылмайды.
 
 ## Скриншоттар
-Нақты жұмыс күйіндегі суреттерді `screenshots/` қалтасына қойыңыз:
+Нақты жұмыс күйіндегі скриншоттар:
 - `register.png`
 - `login.png`
 - `student.png`
