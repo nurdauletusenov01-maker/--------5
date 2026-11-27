@@ -54,13 +54,49 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-            var roleResult = await _userManager.AddToRoleAsync(user, "Student");
+            IdentityResult roleResult;
+            try
+            {
+                roleResult = await _userManager.AddToRoleAsync(user, "Student");
+            }
+            catch (InvalidOperationException exception)
+            {
+                _logger.LogError(
+                    exception,
+                    "Student рөлін тағайындау кезінде қате шықты: {Email}",
+                    model.Email);
+                roleResult = IdentityResult.Failed(
+                    new IdentityError { Description = "Student рөлін тағайындау сәтсіз аяқталды." });
+            }
+
             if (!roleResult.Succeeded)
             {
                 foreach (var error in roleResult.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
+                var deleteResult = await _userManager.DeleteAsync(user);
+                if (!deleteResult.Succeeded)
+                {
+                    foreach (var error in deleteResult.Errors)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            $"Пайдаланушыны кері қайтару қатесі: {error.Description}");
+                    }
+                    _logger.LogError(
+                        "Student рөлін тағайындау сәтсіз болып, пайдаланушыны жою мүмкін болмады: {Email}. Қателер: {Errors}",
+                        model.Email,
+                        string.Join("; ", deleteResult.Errors.Select(error => error.Description)));
+                }
+                else
+                {
+                    _logger.LogInformation(
+                        "Student рөлін тағайындау сәтсіз болғандықтан пайдаланушы кері жойылды: {Email}",
+                        model.Email);
+                }
+
                 _logger.LogError("Пайдаланушыға Student рөлі тағайындалмады: {Email}", model.Email);
                 return View(model);
             }
